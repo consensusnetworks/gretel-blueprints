@@ -1,39 +1,22 @@
-# Default configuration for Synthetic model creation.
-
-# The parameter settings below match the default settings 
-# in Gretel's open source synthetic package
-
-# Privacy filtering is disabled as it's still an experimental
-# feature. Proceed with caution. Allowed values: null, medium, high
+# For training on floating point data, PCA data, etc.
+#
+# Before training, consider crounding all floating points
+# to the minimal precision necessary for your use case. This
+# will help prevent the model from trying to memorize
+# inconsequential data and learn separations in record better.
+#
+# Set vocab_size to 0 to help the model learn the numerical structures better
+#
+# Increasing rnn_units allows the network to learn more complex patterns, but
+# at the expense of increased training and generation time.
 
 schema_version: "1.0"
 
 models:
   - synthetics:
-      data_source: __tmp__
+      data_source: "__tmp__"
       params:
         epochs: 100
-        batch_size: 64
-        vocab_size: 20000
-        reset_states: False
-        learning_rate: 0.01
+        vocab_size: 0
+        learning_rate: .001
         rnn_units: 256
-        dropout_rate: 0.2
-        overwrite: True
-        early_stopping: True
-        gen_temp: 1.0
-        predict_batch_size: 64
-        validation_split: True
-        dp: False
-        dp_noise_multiplier: 0.001
-        dp_l2_norm_clip: 5.0
-        dp_microbatches: 1
-      validators:
-        in_set_count: 10
-        pattern_count: 10
-      generate:
-        num_records: 5000
-        max_invalid: 5000
-      privacy_filters:
-        outliers: null
-        similarity: null
